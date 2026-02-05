@@ -1,0 +1,56 @@
+model:
+  name: zephyr-7b-alpha
+  device: auto
+  load_in_8bit: false
+  max_new_tokens: 100  # Reduced for faster generation
+  temperature: 0.8
+  do_sample: true
+  top_p: 0.9
+  backend: llama.cpp  # options: transformers, llama.cpp
+  # GGUF backend params (used when backend == 'llama.cpp')
+  gguf_model_path: models/zephyr-7b-alpha/zephyr-7b-alpha.Q4_K_M.gguf
+  gguf_n_ctx: 2048  # Reduced context window for speed
+  gguf_n_threads: 8  # Increased threads for faster processing
+  gguf_n_gpu_layers: 0
+rag:
+  use_embeddings: false
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  bm25_weight: 0.7
+  embedding_weight: 0.3
+  max_retrieved_chunks: 3
+  chunk_size: 512
+  chunk_overlap: 50
+debate:
+  max_turns: 6
+  heat_threshold: 0.95  # Very high threshold for maximum heat
+  mediator_intervention_probability: 0.1  # Minimal intervention to allow maximum heat
+  rolling_history_size: 10
+agents:
+  debater_pro:
+    name: Alex
+    role: pro
+    personality: extremely passionate and confrontational
+    aggression_level: 0.98  # Maximum aggression
+  debater_anti:
+    name: Blair
+    role: anti
+    personality: highly combative and dismissive
+    aggression_level: 0.95  # Very high aggression
+  mediator:
+    name: Morgan
+    intervention_style: diplomatic
+    cooling_effectiveness: 0.4  # Minimal cooling effect
+bandit:
+  epsilon: 0.1
+  strategies:
+  - logical_reasoning
+  - emotional_appeal
+  - citation_heavy
+  - questioning
+  - analogy_based
+  learning_rate: 0.05
+polish:
+  enabled: false
+  model: google/flan-t5-small
+  max_tokens: 40
+
